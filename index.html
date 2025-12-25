@@ -3,202 +3,153 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Итоги Года 2025</title>
+<title>Итоги года 2025</title>
+
 <style>
-body, html {
-  margin:0; padding:0; width:100%; height:100%;
-  overflow:hidden; font-family:Arial,sans-serif;
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(to bottom, #0a1a33, #003366);
+  overflow: hidden;
+  font-family: Arial, sans-serif;
 }
 
 #loader, #welcome {
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  display:flex; justify-content:center; align-items:center;
-  color:white; font-size:24px; z-index:100;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  z-index: 10;
 }
 
 #welcome {
   background: rgba(0,0,0,0.7);
-  flex-direction:column;
-  text-align:center;
-  padding:20px;
-  display:none;
-}
-
-#welcome div {
-  margin: 10px 0;
+  flex-direction: column;
+  display: none;
+  padding: 20px;
 }
 
 #welcome button {
-  margin-top:20px; font-size:18px; padding:10px 20px; cursor:pointer;
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 18px;
+  cursor: pointer;
 }
 
-.slider {
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  display:none; justify-content:center; align-items:center; overflow:hidden;
+#slider {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
 }
 
-.slides {
-  display:flex; flex-direction:column; transition:transform 0.8s ease; width:100%;
-}
-
-.slide {
-  width:100%; height:100vh; display:flex; justify-content:center; align-items:center;
-}
-
-.slide img {
-  max-width:90%; max-height:90%; object-fit:contain;
+#slide-img {
+  max-width: 100vw;
+  max-height: 100vh;
+  object-fit: contain;
 }
 
 #arrow {
-  position:absolute; bottom:40px; left:50%;
-  transform:translateX(-50%);
-  font-size:40px; color:white; cursor:pointer; z-index:50;
-  user-select:none; animation:bounce 1s infinite;
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 36px;
+  color: white;
+  cursor: pointer;
+  animation: bounce 1s infinite;
+  z-index: 5;
 }
 
 @keyframes bounce {
-  0%,100% { transform:translateX(-50%) translateY(0); }
-  50% { transform:translateX(-50%) translateY(10px); }
+  0%,100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 10px); }
 }
 
-#canvas {
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  pointer-events:none; z-index:20;
+canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
 }
 </style>
 </head>
+
 <body>
 
 <div id="loader">Загрузка…</div>
 
 <div id="welcome">
-  <div>Добро пожаловать на Итоги Года 2025 в Чате Тюленчика!</div>
-  <div>Нажимайте на стрелочку ↓, чтобы увидеть всё самое интересное!</div>
-  <button id="startBtn">Начать</button>
+  <div>Добро пожаловать на Итоги Года 2025<br>в Чате Тюленчика!</div>
+  <div style="margin-top:10px;">Нажимай на стрелку ↓</div>
+  <button id="start">Начать</button>
 </div>
 
-<div class="slider" id="slider">
-  <div class="slides" id="slides">
-    <div class="slide"><img src="https://i.postimg.cc/053tDfVj/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/qBYmyL1h/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/v8jPfz0t/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/7Y2KV2RJ/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/VLCKRChC/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/NfHd4HnW/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/PrwS4w7b/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/02wVfw4t/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/15qvHqT1/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/g2bNB09T/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/y8CvrN4H/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/4xRBF3kJ/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/2SN2X5R3/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/2Sd2pfrz/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/pLQqNtRL/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/2Sd2pfry/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/Hk0BGCd4/phonto.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/zGw0m18F/phonto.jpg"></div>
-  </div>
-  <div id="arrow">↓</div>
+<div id="slider">
+  <img id="slide-img">
 </div>
 
+<div id="arrow">↓</div>
 <canvas id="canvas"></canvas>
 
-<!-- Фоновая музыка -->
-<audio id="music" loop autoplay src="https://markbartolomeev-blip.github.io/Tulenchik_review_year/Christmas%20Village%20-%20Aaron%20Kenny.mp3"></audio>
+<audio autoplay loop
+src="https://markbartolomeev-blip.github.io/Tulenchik_review_year/Christmas%20Village%20-%20Aaron%20Kenny.mp3">
+</audio>
 
 <script>
-const imgs = Array.from(document.querySelectorAll('#slides img'));
-let loaded = 0;
-imgs.forEach(img => {
-  const t = new Image();
-  t.src = img.src;
-  t.onload = () => {
-    loaded++;
-    if(loaded === imgs.length){
-      document.getElementById('loader').style.display='none';
-      document.getElementById('welcome').style.display='flex';
-    }
-  };
-});
-
-document.getElementById('startBtn').onclick = ()=>{
-  document.getElementById('welcome').style.display='none';
-  document.getElementById('slider').style.display='flex';
-  showSlide(0);
-};
+const images = [
+  "https://i.postimg.cc/053tDfVj/phonto.jpg",
+  "https://i.postimg.cc/qBYmyL1h/phonto.jpg",
+  "https://i.postimg.cc/v8jPfz0t/phonto.jpg",
+  "https://i.postimg.cc/7Y2KV2RJ/phonto.jpg",
+  "https://i.postimg.cc/VLCKRChC/phonto.jpg",
+  "https://i.postimg.cc/NfHd4HnW/phonto.jpg",
+  "https://i.postimg.cc/PrwS4w7b/phonto.jpg",
+  "https://i.postimg.cc/02wVfw4t/phonto.jpg",
+  "https://i.postimg.cc/15qvHqT1/phonto.jpg",
+  "https://i.postimg.cc/g2bNB09T/phonto.jpg",
+  "https://i.postimg.cc/y8CvrN4H/phonto.jpg",
+  "https://i.postimg.cc/4xRBF3kJ/phonto.jpg",
+  "https://i.postimg.cc/2SN2X5R3/phonto.jpg",
+  "https://i.postimg.cc/2Sd2pfrz/phonto.jpg",
+  "https://i.postimg.cc/pLQqNtRL/phonto.jpg",
+  "https://i.postimg.cc/2Sd2pfry/phonto.jpg",
+  "https://i.postimg.cc/Hk0BGCd4/phonto.jpg",
+  "https://i.postimg.cc/zGw0m18F/phonto.jpg"
+];
 
 let index = 0;
-const slides = document.getElementById('slides');
-const total = imgs.length;
-const arrow = document.getElementById('arrow');
-arrow.onclick = nextSlide;
+const img = document.getElementById("slide-img");
+const arrow = document.getElementById("arrow");
 
-function showSlide(i){
-  slides.style.transform = `translateY(-${i*100}vh)`;
-  if(i===1) fireworkOnce();
-  snowStart();
-  if(i===total-1) arrow.style.display='none';
-}
+Promise.all(images.map(src => new Promise(r => {
+  const i = new Image();
+  i.src = src;
+  i.onload = r;
+}))).then(() => {
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("welcome").style.display = "flex";
+});
 
-function nextSlide(){
-  if(index<total-1){
-    index++;
-    showSlide(index);
+document.getElementById("start").onclick = () => {
+  document.getElementById("welcome").style.display = "none";
+  document.getElementById("slider").style.display = "flex";
+  img.src = images[0];
+};
+
+arrow.onclick = () => {
+  index++;
+  if (index >= images.length) {
+    arrow.style.display = "none";
+    return;
   }
-}
-
-// 🎆 Фейерверк на втором слайде
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = innerWidth; canvas.height = innerHeight;
-let fired=false;
-
-function fireworkOnce(){
-  if(fired) return;
-  fired=true;
-  let parts=[];
-  for(let i=0;i<60;i++){
-    parts.push({x:canvas.width/2,y:canvas.height/2,vx:(Math.random()-0.5)*6,vy:(Math.random()-0.5)*6,alpha:1});
-  }
-  let anim = setInterval(()=>{
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    parts.forEach(p=>{
-      p.x+=p.vx; p.y+=p.vy; p.vy+=0.05; p.alpha-=0.02;
-      ctx.globalAlpha=p.alpha;
-      ctx.fillStyle='white';
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,3,0,Math.PI*2);
-      ctx.fill();
-    });
-    ctx.globalAlpha=1;
-  },30);
-  setTimeout(()=>clearInterval(anim),1200);
-}
-
-// ❄️ снег — белые шарики, меньше
-let snowflakes=[];
-function snowStart(){
-  if(snowflakes.length) return;
-  for(let i=0;i<25;i++){
-    snowflakes.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*5+2, speed:Math.random()+0.1});
-  }
-  function loop(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    snowflakes.forEach(f=>{
-      f.y+=f.speed;
-      if(f.y>canvas.height) f.y=0;
-      ctx.fillStyle='white';
-      ctx.beginPath();
-      ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
-      ctx.fill();
-    });
-    requestAnimationFrame(loop);
-  }
-  loop();
-}
-
-window.onresize = ()=>{ canvas.width=innerWidth; canvas.height=innerHeight; };
+  img.src = images[index];
+};
 </script>
 
 </body>
