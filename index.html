@@ -47,12 +47,29 @@ html, body {
   display: none;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
-#slide {
+.slide {
   max-width: 100vw;
   max-height: 100vh;
   object-fit: contain;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: top 1.5s ease-out;
+}
+
+.slide.above {
+  top: -50vh;
+}
+
+.slide.center {
+  top: 50%;
+}
+
+.slide.below {
+  top: 150vh;
 }
 
 #arrow {
@@ -64,11 +81,47 @@ html, body {
   color: white;
   cursor: pointer;
   animation: bounce 1s infinite;
+  z-index: 100;
 }
 
 @keyframes bounce {
   0%,100% { transform: translate(-50%, 0); }
   50% { transform: translate(-50%, 10px); }
+}
+
+/* Снегопад */
+#snowflakes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.snowflake {
+  position: absolute;
+  top: -10px;
+  background-color: white;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+/* Анимации для снежинок разного размера */
+@keyframes fall1 {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+@keyframes fall2 {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+  100% { transform: translateY(100vh) rotate(180deg); opacity: 0; }
+}
+
+@keyframes fall3 {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+  100% { transform: translateY(100vh) rotate(90deg); opacity: 0; }
 }
 </style>
 </head>
@@ -89,10 +142,12 @@ html, body {
 </div>
 
 <div id="slider">
-  <img id="slide">
+  <!-- Слайды будут создаваться динамически -->
 </div>
 
 <div id="arrow">↓</div>
+
+<div id="snowflakes"></div>
 
 <audio id="music" loop>
   <source src="https://markbartolomeev-blip.github.io/Tulenchik_review_year/Christmas%20Village%20-%20Aaron%20Kenny.mp3" type="audio/mpeg">
@@ -120,10 +175,96 @@ const images = [
   "https://i.postimg.cc/zGw0m18F/phonto.jpg"
 ];
 
-let index = 0;
-const img = document.getElementById("slide");
+let currentIndex = 0;
+let isAnimating = false;
+const slider = document.getElementById("slider");
 const arrow = document.getElementById("arrow");
 const music = document.getElementById("music");
+
+// Функция для создания слайда
+function createSlide() {
+  const slide = document.createElement('img');
+  slide.className = 'slide above';
+  return slide;
+}
+
+// Функция для создания снежинок
+function createSnowflakes() {
+  const snowflakesContainer = document.getElementById('snowflakes');
+  
+  // Создаем 100 снежинок
+  for (let i = 0; i < 100; i++) {
+    const snowflake = document.createElement('div');
+    snowflake.className = 'snowflake';
+    
+    // Случайный размер от 2 до 6 пикселей
+    const size = Math.random() * 4 + 2;
+    snowflake.style.width = `${size}px`;
+    snowflake.style.height = `${size}px`;
+    
+    // Случайная начальная позиция
+    snowflake.style.left = `${Math.random() * 100}vw`;
+    
+    // Случайная скорость падения
+    const duration = Math.random() * 5 + 5; // от 5 до 10 секунд
+    const delay = Math.random() * 5; // задержка до 5 секунд
+    
+    // Выбираем одну из трех анимаций
+    const animationType = Math.floor(Math.random() * 3) + 1;
+    
+    snowflake.style.animation = `fall${animationType} ${duration}s linear ${delay}s infinite`;
+    
+    snowflakesContainer.appendChild(snowflake);
+  }
+}
+
+// Функция для перехода к следующей картинке
+function nextImage() {
+  if (isAnimating) return;
+  if (currentIndex >= images.length) {
+    arrow.style.display = "none";
+    return;
+  }
+  
+  isAnimating = true;
+  
+  // Все слайды в контейнере
+  const allSlides = Array.from(slider.getElementsByClassName('slide'));
+  
+  // Находим активный слайд (в центре)
+  const activeSlide = allSlides.find(slide => slide.classList.contains('center'));
+  
+  // Если есть активный слайд, отправляем его вниз
+  if (activeSlide) {
+    activeSlide.classList.remove('center');
+    activeSlide.classList.add('below');
+    
+    // Удаляем слайд после анимации
+    setTimeout(() => {
+      if (activeSlide.parentNode) {
+        activeSlide.parentNode.removeChild(activeSlide);
+      }
+    }, 1500);
+  }
+  
+  // Создаем новый слайд для следующей картинки
+  const newSlide = createSlide();
+  newSlide.src = images[currentIndex];
+  slider.appendChild(newSlide);
+  
+  // Новый слайд опускается из-за верха в центр
+  setTimeout(() => {
+    newSlide.classList.remove('above');
+    newSlide.classList.add('center');
+    
+    // После завершения анимации разрешаем следующий клик
+    setTimeout(() => {
+      isAnimating = false;
+    }, 1500);
+  }, activeSlide ? 100 : 0);
+  
+  currentIndex++;
+}
 
 Promise.all(images.map(src => new Promise(res => {
   const i = new Image();
@@ -132,6 +273,8 @@ Promise.all(images.map(src => new Promise(res => {
 }))).then(() => {
   document.getElementById("loader").style.display = "none";
   document.getElementById("welcome").style.display = "flex";
+  // Создаем снежинки после загрузки
+  createSnowflakes();
 });
 
 document.getElementById("start").onclick = () => {
@@ -140,17 +283,18 @@ document.getElementById("start").onclick = () => {
 
   document.getElementById("welcome").style.display = "none";
   document.getElementById("slider").style.display = "flex";
-  img.src = images[0];
+  
+  // Загружаем первую картинку
+  const firstSlide = createSlide();
+  firstSlide.src = images[0];
+  firstSlide.classList.remove('above');
+  firstSlide.classList.add('center');
+  slider.appendChild(firstSlide);
+  
+  currentIndex = 1;
 };
 
-arrow.onclick = () => {
-  index++;
-  if (index >= images.length) {
-    arrow.style.display = "none";
-    return;
-  }
-  img.src = images[index];
-};
+arrow.onclick = nextImage;
 </script>
 
 </body>
