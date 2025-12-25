@@ -11,8 +11,8 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, #0a1a33, #003366);
   overflow: hidden;
+  background: linear-gradient(to bottom, #0a1a33, #003366);
   font-family: Arial, sans-serif;
 }
 
@@ -22,14 +22,14 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
   text-align: center;
+  color: white;
   z-index: 10;
 }
 
 #welcome {
-  background: rgba(0,0,0,0.7);
   flex-direction: column;
+  background: rgba(0,0,0,0.7);
   display: none;
   padding: 20px;
 }
@@ -49,7 +49,7 @@ html, body {
   align-items: center;
 }
 
-#slide-img {
+#slide {
   max-width: 100vw;
   max-height: 100vh;
   object-fit: contain;
@@ -64,18 +64,11 @@ html, body {
   color: white;
   cursor: pointer;
   animation: bounce 1s infinite;
-  z-index: 5;
 }
 
 @keyframes bounce {
   0%,100% { transform: translate(-50%, 0); }
   50% { transform: translate(-50%, 10px); }
-}
-
-canvas {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
 }
 </style>
 </head>
@@ -85,20 +78,24 @@ canvas {
 <div id="loader">Загрузка…</div>
 
 <div id="welcome">
-  <div>Добро пожаловать на Итоги Года 2025<br>в Чате Тюленчика!</div>
-  <div style="margin-top:10px;">Нажимай на стрелку ↓</div>
+  <div>
+    Добро пожаловать на Итоги Года 2025<br>
+    в Чате Тюленчика!
+  </div>
+  <div style="margin-top:10px;">
+    Нажимай на стрелку ↓
+  </div>
   <button id="start">Начать</button>
 </div>
 
 <div id="slider">
-  <img id="slide-img">
+  <img id="slide">
 </div>
 
 <div id="arrow">↓</div>
-<canvas id="canvas"></canvas>
 
-<audio autoplay loop
-src="https://markbartolomeev-blip.github.io/Tulenchik_review_year/Christmas%20Village%20-%20Aaron%20Kenny.mp3">
+<audio id="music" loop>
+  <source src="https://markbartolomeev-blip.github.io/Tulenchik_review_year/Christmas%20Village%20-%20Aaron%20Kenny.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -124,19 +121,23 @@ const images = [
 ];
 
 let index = 0;
-const img = document.getElementById("slide-img");
+const img = document.getElementById("slide");
 const arrow = document.getElementById("arrow");
+const music = document.getElementById("music");
 
-Promise.all(images.map(src => new Promise(r => {
+Promise.all(images.map(src => new Promise(res => {
   const i = new Image();
   i.src = src;
-  i.onload = r;
+  i.onload = res;
 }))).then(() => {
   document.getElementById("loader").style.display = "none";
   document.getElementById("welcome").style.display = "flex";
 });
 
 document.getElementById("start").onclick = () => {
+  music.volume = 0.6;
+  music.play();
+
   document.getElementById("welcome").style.display = "none";
   document.getElementById("slider").style.display = "flex";
   img.src = images[0];
