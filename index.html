@@ -10,41 +10,58 @@ body, html {
   overflow:hidden; font-family:Arial,sans-serif;
   background: linear-gradient(to bottom, #0a1a33, #003366);
 }
+
 #loader, #welcome {
   position:absolute; top:0; left:0; width:100%; height:100%;
   display:flex; justify-content:center; align-items:center;
   color:white; font-size:24px; z-index:100;
 }
+
 #welcome {
-  background: rgba(0,0,0,0.7); flex-direction:column; text-align:center;
-  padding:20px; display:none;
+  background: rgba(0,0,0,0.7);
+  flex-direction:column;
+  text-align:center;
+  padding:20px;
+  display:none;
 }
+
+#welcome div {
+  margin: 10px 0;
+}
+
 #welcome button {
   margin-top:20px; font-size:18px; padding:10px 20px; cursor:pointer;
 }
+
 .slider {
   position:absolute; top:0; left:0; width:100%; height:100%;
-  display:none; justify-content:center; align-items:flex-start; overflow:hidden;
+  display:none; justify-content:center; align-items:center; overflow:hidden;
 }
+
 .slides {
   display:flex; flex-direction:column; transition:transform 0.8s ease; width:100%;
 }
+
 .slide {
   width:100%; height:100vh; display:flex; justify-content:center; align-items:center;
 }
+
 .slide img {
-  max-width:100%; max-height:95vh; object-fit:contain;
+  max-width:90%; max-height:90%; object-fit:contain;
 }
+
 #arrow {
   position:absolute; bottom:40px; left:50%;
   transform:translateX(-50%);
   font-size:40px; color:white; cursor:pointer; z-index:50;
   user-select:none; animation:bounce 1s infinite;
 }
+
 @keyframes bounce {
   0%,100% { transform:translateX(-50%) translateY(0); }
   50% { transform:translateX(-50%) translateY(10px); }
 }
+
 #canvas {
   position:absolute; top:0; left:0; width:100%; height:100%;
   pointer-events:none; z-index:20;
@@ -88,7 +105,7 @@ body, html {
 <canvas id="canvas"></canvas>
 
 <!-- Фоновая музыка -->
-<audio id="music" loop autoplay src="Christmas Village - Aaron Kenny.mp3"></audio>
+<audio id="music" loop autoplay src="https://markbartolomeev-blip.github.io/Tulenchik_review_year/Christmas%20Village%20-%20Aaron%20Kenny.mp3"></audio>
 
 <script>
 const imgs = Array.from(document.querySelectorAll('#slides img'));
@@ -98,7 +115,7 @@ imgs.forEach(img => {
   t.src = img.src;
   t.onload = () => {
     loaded++;
-    if(loaded === imgs.length) {
+    if(loaded === imgs.length){
       document.getElementById('loader').style.display='none';
       document.getElementById('welcome').style.display='flex';
     }
@@ -125,7 +142,7 @@ function showSlide(i){
 }
 
 function nextSlide(){
-  if(index < total-1){
+  if(index<total-1){
     index++;
     showSlide(index);
   }
@@ -154,7 +171,7 @@ function fireworkOnce(){
       ctx.arc(p.x,p.y,3,0,Math.PI*2);
       ctx.fill();
     });
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha=1;
   },30);
   setTimeout(()=>clearInterval(anim),1200);
 }
@@ -181,10 +198,7 @@ function snowStart(){
   loop();
 }
 
-window.onresize = ()=>{
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-};
+window.onresize = ()=>{ canvas.width=innerWidth; canvas.height=innerHeight; };
 </script>
 
 </body>
