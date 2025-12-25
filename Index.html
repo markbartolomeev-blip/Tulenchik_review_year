@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Итоги Года 2025</title>
+<style>
+body, html {
+  margin:0; padding:0; width:100%; height:100%;
+  overflow:hidden; font-family:Arial,sans-serif;
+  background: linear-gradient(to bottom, #0a1a33, #003366);
+}
+#loader, #welcome {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  display:flex; justify-content:center; align-items:center;
+  color:white; font-size:24px; z-index:100;
+}
+#welcome {
+  background: rgba(0,0,0,0.7); flex-direction:column; text-align:center;
+  padding:20px; display:none;
+}
+#welcome button {
+  margin-top:20px; font-size:18px; padding:10px 20px; cursor:pointer;
+}
+.slider {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  display:none; justify-content:center; align-items:flex-start; overflow:hidden;
+}
+.slides {
+  display:flex; flex-direction:column; transition:transform 0.8s ease; width:100%;
+}
+.slide {
+  width:100%; height:100vh; display:flex; justify-content:center; align-items:center;
+}
+.slide img {
+  max-width:100%; max-height:95vh; object-fit:contain;
+}
+#arrow {
+  position:absolute; bottom:40px; left:50%;
+  transform:translateX(-50%);
+  font-size:40px; color:white; cursor:pointer; z-index:50;
+  user-select:none; animation:bounce 1s infinite;
+}
+@keyframes bounce {
+  0%,100% { transform:translateX(-50%) translateY(0); }
+  50% { transform:translateX(-50%) translateY(10px); }
+}
+#canvas {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  pointer-events:none; z-index:20;
+}
+</style>
+</head>
+<body>
+
+<div id="loader">Загрузка…</div>
+
+<div id="welcome">
+  <div>Добро пожаловать на Итоги Года 2025 в Чате Тюленчика!</div>
+  <div>Нажимайте на стрелочку ↓, чтобы увидеть всё самое интересное!</div>
+  <button id="startBtn">Начать</button>
+</div>
+
+<div class="slider" id="slider">
+  <div class="slides" id="slides">
+    <div class="slide"><img src="https://i.postimg.cc/053tDfVj/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/qBYmyL1h/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/v8jPfz0t/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/7Y2KV2RJ/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/VLCKRChC/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/NfHd4HnW/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/PrwS4w7b/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/02wVfw4t/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/15qvHqT1/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/g2bNB09T/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/y8CvrN4H/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/4xRBF3kJ/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/2SN2X5R3/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/2Sd2pfrz/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/pLQqNtRL/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/2Sd2pfry/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/Hk0BGCd4/phonto.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/zGw0m18F/phonto.jpg"></div>
+  </div>
+  <div id="arrow">↓</div>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<!-- Фоновая музыка -->
+<audio id="music" loop autoplay src="Christmas Village - Aaron Kenny.mp3"></audio>
+
+<script>
+const imgs = Array.from(document.querySelectorAll('#slides img'));
+let loaded = 0;
+imgs.forEach(img => {
+  const t = new Image();
+  t.src = img.src;
+  t.onload = () => {
+    loaded++;
+    if(loaded === imgs.length) {
+      document.getElementById('loader').style.display='none';
+      document.getElementById('welcome').style.display='flex';
+    }
+  };
+});
+
+document.getElementById('startBtn').onclick = ()=>{
+  document.getElementById('welcome').style.display='none';
+  document.getElementById('slider').style.display='flex';
+  showSlide(0);
+};
+
+let index = 0;
+const slides = document.getElementById('slides');
+const total = imgs.length;
+const arrow = document.getElementById('arrow');
+arrow.onclick = nextSlide;
+
+function showSlide(i){
+  slides.style.transform = `translateY(-${i*100}vh)`;
+  if(i===1) fireworkOnce();
+  snowStart();
+  if(i===total-1) arrow.style.display='none';
+}
+
+function nextSlide(){
+  if(index < total-1){
+    index++;
+    showSlide(index);
+  }
+}
+
+// 🎆 Фейерверк на втором слайде
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = innerWidth; canvas.height = innerHeight;
+let fired=false;
+
+function fireworkOnce(){
+  if(fired) return;
+  fired=true;
+  let parts=[];
+  for(let i=0;i<60;i++){
+    parts.push({x:canvas.width/2,y:canvas.height/2,vx:(Math.random()-0.5)*6,vy:(Math.random()-0.5)*6,alpha:1});
+  }
+  let anim = setInterval(()=>{
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    parts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.05; p.alpha-=0.02;
+      ctx.globalAlpha=p.alpha;
+      ctx.fillStyle='white';
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,3,0,Math.PI*2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+  },30);
+  setTimeout(()=>clearInterval(anim),1200);
+}
+
+// ❄️ снег — белые шарики, меньше
+let snowflakes=[];
+function snowStart(){
+  if(snowflakes.length) return;
+  for(let i=0;i<25;i++){
+    snowflakes.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*5+2, speed:Math.random()+0.1});
+  }
+  function loop(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    snowflakes.forEach(f=>{
+      f.y+=f.speed;
+      if(f.y>canvas.height) f.y=0;
+      ctx.fillStyle='white';
+      ctx.beginPath();
+      ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
+      ctx.fill();
+    });
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+window.onresize = ()=>{
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+};
+</script>
+
+</body>
+</html>
